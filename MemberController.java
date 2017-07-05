@@ -27,6 +27,8 @@ public class MemberController {
 	@RequestMapping("list.do")
 	public ModelAndView list() throws Exception{
 		
+		// TEST!!
+		
 		List<MemberVO> list = memberService.listAll();
 		
 		// 데이터를 맵에 저장
