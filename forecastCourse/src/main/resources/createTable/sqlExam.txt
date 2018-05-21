@@ -1,0 +1,155 @@
+-----------test sql
+create table test3(
+
+	dt1 DATETIME DEFAULT CURRENT_TIMESTAMP,
+	dt2 DATETIME DEFAULT 0,
+	tno SMALLINT NOT NULL AUTO_INCREMENT,
+	PRIMARY KEY(tno)
+);
+
+insert into test2
+VALUES();
+
+
+{"type":"FeatureCollection","features":[{"type":"Feature","geometry":{"type":"LineString","coordinates":[[126.8527891,37.5202673],[126.8524658,37.5210227],[126.8655345,37.5225718],[126.867426,37.5183637],[126.8588049,37.515505],[126.8587209,37.5147474],[126.8560598,37.5136513],[126.855788,37.5136859],[126.8532964,37.5191885]],"mantle_properties":{"strokeColor":"#007EEA","strokeOpacity":1,"strokeWeight":3,"strokeStyle":"solid","strokeLineCap":"butt","strokeLineJoin":"miter","visible":true,"clickable":true,"endIcon":2,"endIconSize":16,"zIndex":0,"overlayType":"Polyline"}},"properties":{"strokeColor":"#007EEA","strokeOpacity":1,"strokeWeight":3,"strokeStyle":"solid","strokeLineCap":"butt","strokeLineJoin":"miter","visible":true,"clickable":true,"endIcon":2,"endIconSize":16,"zIndex":0,"overlayType":"Polyline"}}],"bbox":[126.8524658,37.5136513,126.867426,37.5225718]}
+
+insert into tbl_geo(title,writer,distance,gjson)
+	values('동네한바퀴','김군',2,'{"type":"FeatureCollection","features":[{"type":"Feature","geometry":{"type":"LineString","coordinates":[[126.8527891,37.5202673],[126.8524658,37.5210227],[126.8655345,37.5225718],[126.867426,37.5183637],[126.8588049,37.515505],[126.8587209,37.5147474],[126.8560598,37.5136513],[126.855788,37.5136859],[126.8532964,37.5191885]],"mantle_properties":{"strokeColor":"#007EEA","strokeOpacity":1,"strokeWeight":3,"strokeStyle":"solid","strokeLineCap":"butt","strokeLineJoin":"miter","visible":true,"clickable":true,"endIcon":2,"endIconSize":16,"zIndex":0,"overlayType":"Polyline"}},"properties":{"strokeColor":"#007EEA","strokeOpacity":1,"strokeWeight":3,"strokeStyle":"solid","strokeLineCap":"butt","strokeLineJoin":"miter","visible":true,"clickable":true,"endIcon":2,"endIconSize":16,"zIndex":0,"overlayType":"Polyline"}}],"bbox":[126.8524658,37.5136513,126.867426,37.5225718]}');
+
+DROP TABLE tbl_geo_reply;
+
+SELECT * FROM (
+        SELECT @rownum:=@rownum+1 AS rn, A.* FROM (
+
+			SELECT grno, gno, replytext, replyer, regdate,
+				(SELECT writer FROM tbl_geo WHERE gno=6) AS writer
+			FROM tbl_geo_reply
+			WHERE gno=6
+			ORDER BY grno DESC
+
+        )A, (SELECT @rownum:=0)T
+)B WHERE B.rn BETWEEN 1 AND 10;
+
+
+SELECT 
+		gno,
+		title,
+        writer, 
+        distance,
+        regdate,
+		gjson,
+		(SELECT COUNT(*) FROM tbl_geo_reply WHERE gno = g.gno) AS recnt
+	FROM
+		tbl_geo g
+	ORDER BY gno DESC
+	
+	
+
+	SELECT * FROM (
+	        SELECT @rownum:=@rownum+1 AS rn, A.* FROM(
+
+        SELECT 
+			@rownum,
+            bno,
+            gno, 
+            title, 
+            content, 
+            writer,
+            b.regdate, 
+            viewcnt
+
+        FROM 
+            tbl_board b, tbl_member m
+
+	            WHERE b.writer = m.id 
+	            AND title like '%'||''||'%'
+
+        ORDER BY bno DESC, b.regdate DESC 
+
+	        ) A, (SELECT @rownum:=0)T
+	    ) B WHERE B.rn BETWEEN 1 AND 10
+		
+		
+		INSERT INTO tbl_board (
+          bno, 
+          title, 
+          content, 
+          writer
+        ) VALUES (
+          (SELECT IFNULL(MAX(bno)+1, 1)FROM tbl_board)A,
+          'AA',
+          'TEst야',
+          'kkk'
+        )
+		
+		INSERT INTO tbl_board (
+          bno, 
+          title, 
+          content, 
+          writer
+        )SELECT IFNULL(MAX(bno)+1, 1) , 'AA',
+          'TEst야',
+          'kkk'
+		  FROM tbl_board
+		  
+--------------------------------------------------------
+
+경로 table
+create table tbl_geo(
+	gno SMALLINT NOT NULL AUTO_INCREMENT,
+	title VARCHAR(50) ,
+	writer VARCHAR(20) NOT NULL,	
+	distance SMALLINT ,
+	regdate DATETIME DEFAULT CURRENT_TIMESTAMP,
+	gjson JSON NOT NULL ,
+	조회 count 추가 필요할듯
+	PRIMARY KEY(gno)
+);
+alter table tbl_geo add viewcnt INT DEFAULT '0', ;
+
+경로 댓글
+create table tbl_geo_reply(
+	grno SMALLINT NOT NULL AUTO_INCREMENT,
+	gno SMALLINT NOT NULL,
+	replytext VARCHAR(50) NOT NULL,
+	replyer VARCHAR(50) NOT NULL,
+	regdate DATETIME DEFAULT CURRENT_TIMESTAMP,
+	PRIMARY KEY(grno)
+);
+
+게시판 table
+create table tbl_board(
+	bno INT NOT NULL AUTO_INCREMENT,
+	gno SMALLINT,
+	title VARCHAR(50) NOT NULL,
+	content TEXT NOT NULL,
+	writer VARCHAR(20) NOT NULL,
+	regdate DATETIME DEFAULT CURRENT_TIMESTAMP,
+	viewcnt INT DEFAULT '0',
+	PRIMARY KEY(bno)
+);
+
+create table tbl_board_reply(
+	rno SMALLINT NOT NULL AUTO_INCREMENT,
+	bno INT NOT NULL,
+	replytext VARCHAR(50) NOT NULL,
+	replyer VARCHAR(50) NOT NULL,
+	regdate DATETIME DEFAULT CURRENT_TIMESTAMP,
+	PRIMARY KEY(rno)
+);
+
+회원 table
+create table tbl_member(
+	id VARCHAR(20) NOT NULL,
+	pw VARCHAR(20) NOT NULL,
+	name VARCHAR(20) NOT NULL,
+	email VARCHAR(40) NOT NULL,
+	regdate DATETIME DEFAULT CURRENT_TIMESTAMP,
+	phone VARCHAR(11) NOT NULL,
+	PRIMARY KEY(id)
+);
+
+
+
+
+

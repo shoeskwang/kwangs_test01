@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<!-- 다른 mapper와 중복되지 않도록 네임스페이스 기재 -->
+<mapper namespace="member">
+	<select id="loginCheck" resultType="String">
+		SELECT name FROM tbl_member
+		WHERE id = #{id} AND pw = #{pw}
+	</select>
+	
+	<select id="viewMember" resultType="com.kwang.forecastCourse.model.dto.MemberVO">
+		SELECT  
+			name,
+			id,
+			email,
+			phone,
+			regdate
+		FROM tbl_member
+		WHERE id = #{id} AND pw = #{pw}
+	</select>
+	
+	
+	 <!-- 01_02. 아이디 레코드 갯수 -->
+	<select id="idCheck" resultType="int">
+	    SELECT COUNT(*) FROM tbl_member
+	    WHERE id = #{id}
+	</select>
+	
+	<insert id="insert">
+        INSERT INTO tbl_member (
+          id, 
+          pw, 
+          name, 
+          email,
+          phone
+        ) VALUES (
+          #{id},
+          #{pw},
+          #{name},
+          #{email},
+          #{phone}
+        )
+    </insert>
+</mapper>

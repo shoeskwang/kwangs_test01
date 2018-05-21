@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+	
+	<!-- Root Context: defines shared resources visible to all other web components -->
+	
+	<bean id="dataSource"
+        class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+      <!--   드라이버 클래스 이름이 변경됨 -->
+        <property name="driverClassName" value="net.sf.log4jdbc.sql.jdbcapi.DriverSpy"></property>
+       <!-- //MYSQL -->
+       	<property name="url" value="jdbc:log4jdbc:mysql://127.0.0.1:3307/course" />
+        <property name="username" value="root" />
+        <property name="password" value="1346" />
+        
+       <!-- //ORACLE -->
+        <!-- <property name="url" value="jdbc:log4jdbc:oracle:thin:@localhost:1521:XE" /> 
+        <property name="username" value="scott" />
+        <property name="password" value="tiger2" /> -->
+        
+    </bean>
+    <!-- SqlSessionFactory 객체 주입 -->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource" />
+        <property name="configLocation" value="classpath:mybatis-config.xml"></property>
+        <property name="mapperLocations" value="classpath:mapper/*.xml"></property>
+    </bean>
+    <!-- SqlSession 객체 주입 -->
+    <bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate"
+        destroy-method="clearCache">
+        <constructor-arg name="sqlSessionFactory" ref="sqlSessionFactory"></constructor-arg>
+    </bean>
+	
+</beans>

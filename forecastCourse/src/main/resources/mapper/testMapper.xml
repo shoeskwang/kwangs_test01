@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="test">
+<!-- 
+	SELECT 
+		geo_num as geoNum,
+		geo_name as geoName,
+		geo_writer as geoWriter,
+		geo_regdate as geoRegDate,
+		geo_json as geoJson
+	FROM
+		tbl_test
+	WHERE 
+		geo_num = #{geoNum} 
+-->
+	<select id="read" resultType="com.kwang.forecastCourse.model.dto.GeoVO">
+	SELECT 
+		gno,
+		title,
+        writer, 
+        distance,
+        regdate,
+		gjson
+	FROM
+		tbl_geo
+	WHERE 
+		gno = #{gno}
+	</select>
+	
+	<insert id="insert">
+        INSERT INTO tbl_geo (
+          title,
+          writer, 
+          distance,
+          gjson
+        ) VALUES (
+        	#{title},#{writer},#{distance},#{gjson}
+        )
+        
+    </insert>
+</mapper>

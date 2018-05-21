@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="seat">
+	<!-- 01. 게시글 전체 목록 조회 -->
+    <select id="list" resultType="com.kwang.commerce01.model.dto.SeatVO">
+        SELECT
+        	sno,
+        	tno,
+        	day1,
+        	day2,
+        	day3,
+        	day4,
+        	day5,
+        	day6,
+        	day7,
+        	day8,
+        	day9,
+        	day10
+        FROM
+        	tbl_seats
+        WHERE
+        	tno = #{tno}
+    </select>
+    
+    <!-- 05. 게시글 수정처리 -->
+    <update id="update">
+        UPDATE tbl_seats 
+        SET
+            <choose>
+	        <when test="whatday == 1">
+	            day1=#{tempSeat}
+	        </when>
+	        <when test="whatday == 2">
+	            day2=#{tempSeat}
+	        </when>
+	        <when test="whatday == 3">
+	            day3=#{tempSeat}
+	        </when>
+	        <when test="whatday == 4">
+	            day4=#{tempSeat}
+	        </when>
+	        <when test="whatday == 5">
+	            day5=#{tempSeat}
+	        </when>
+	        <when test="whatday == 6">
+	            day6=#{tempSeat}
+	        </when>
+	        <when test="whatday == 7">
+	            day7=#{tempSeat}
+	        </when>
+	        <when test="whatday == 8">
+	            day8=#{tempSeat}
+	        </when>
+	        <when test="whatday == 9">
+	            day9=#{tempSeat}
+	        </when>
+	        <when test="whatday == 10">
+	            day10=#{tempSeat}
+	        </when>
+	        <otherwise>
+	            
+	        </otherwise>
+	    </choose>
+        WHERE tno = #{tno}
+    </update>
+	
+</mapper>

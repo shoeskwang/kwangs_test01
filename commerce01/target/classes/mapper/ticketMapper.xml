@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ticket">
+	<select id="listAll" resultType="com.kwang.commerce01.model.dto.TicketVO">
+		SELECT 
+		tno,title,summary,sdate,edate,location,tclass,genre,rtime,rdate,state,theme,content,poster,tcount,tprice 
+		FROM tbl_ticket
+		<include refid="sort"></include>
+	</select>
+	
+	<select id="listTheme" resultType="com.kwang.commerce01.model.dto.TicketVO">
+		SELECT 
+		tno,title,summary,sdate,edate,location,tclass,genre,rtime,rdate,state,theme,content,poster,tcount,tprice 
+		FROM tbl_ticket
+		<include refid="theme"></include>
+		<include refid="genre"></include>
+		<include refid="location"></include>
+		<include refid="sort"></include>
+	</select>
+	
+	<insert id="insert">
+		INSERT 
+INTO tbl_ticket (tno,title,summary,sdate,edate,location,tclass,genre,rtime,rdate,state,theme,content,poster,tcount,tprice)
+VALUES(#{tno},#{title},#{summary},to_date(#{sdate},'YYYY-MM-DD'),to_date(#{edate},'YYYY-MM-DD'),#{location},#{tclass},#{genre},#{rtime},to_date(#{rdate},'YYYY-MM-DD'),#{state},#{theme},#{content},#{poster},#{tcount},#{tprice});
+	</insert>
+	
+	<select id="view" resultType="com.kwang.commerce01.model.dto.TicketVO">
+        SELECT * FROM tbl_ticket 
+        WHERE tno = #{tno}
+    </select>
+	
+	<!-- sql code 조각 -->
+	<!-- 반복되는 sql의 일부를 sql태그를 이용하여 따로 빼둘수 있다. -->
+	<sql id="sort">
+	    <choose>
+	        <when test="sortOption == 1">
+	            ORDER BY tcount DESC
+	        </when>
+	        <when test="sortOption == 3">
+	            ORDER BY tprice DESC
+	        </when>
+	        <otherwise>
+	            ORDER BY sdate DESC
+	        </otherwise>
+	    </choose>
+	</sql>
+	
+	<sql id="theme">
+	    <choose>
+	        <when test="theme == 1">
+	            WHERE theme = 1
+	        </when>
+	        <when test="theme == 2">
+	            WHERE theme = 2
+	        </when>
+	        <when test="theme == 3">
+	            WHERE theme = 3
+	        </when>
+	        <when test="theme == 4">
+	            WHERE theme = 4
+	        </when>
+	        <otherwise>
+	            WHERE tno=poster
+	        </otherwise>
+	    </choose>
+	</sql>
+	<sql id="genre">
+	    <choose>
+	        <when test="genre == 1">
+	            AND genre = 1
+	        </when>
+	        <when test="genre == 2">
+	            AND genre = 2
+	        </when>
+	        <when test="genre == 3">
+	            AND genre = 3
+	        </when>
+	        <when test="genre == 4">
+	            AND genre = 4
+	        </when>
+	        <when test="genre == 5">
+	            AND genre = 5
+	        </when>
+	        <otherwise>
+	        </otherwise>
+	    </choose>
+	</sql>
+	
+	<sql id="location">
+	    <choose>
+	        <when test="location == 1">
+	            AND location = 1
+	        </when>
+	        <when test="location == 2">
+	            AND location = 2
+	        </when>
+	        <when test="location == 3">
+	            AND location = 3
+	        </when>
+	        <when test="location == 4">
+	            AND location = 4
+	        </when>
+	        <when test="location == 5">
+	            AND location = 5
+	        </when>
+	        <otherwise>
+	        </otherwise>
+	    </choose>
+	</sql>
+</mapper>

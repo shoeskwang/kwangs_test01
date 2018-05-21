@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="reply">
+	<insert id="insertReply">
+		INSERT INTO tbl_geo_reply (gno, replytext, replyer)
+        VALUES (#{gno}, #{replytext}, #{replyer})
+	</insert>
+	
+	<select id="listReply" resultType="com.kwang.forecastCourse.model.dto.ReplyVO">
+		<include refid="pagingHeader"/>
+		
+		SELECT r.grno, r.gno, r.replytext, r.replyer, r.regdate,
+			(SELECT writer FROM tbl_geo WHERE gno = #{gno}) AS writer
+		FROM tbl_geo_reply r
+		WHERE gno=#{gno}
+		ORDER BY r.grno DESC
+		
+		<include refid="pagingFooter"/>
+	</select>
+	
+	<!-- 댓글 갯수(페이징처리) -->
+    <select id="countReply" resultType="int">
+        SELECT COUNT(*) FROM tbl_geo_reply WHERE gno=#{gno}
+    </select>
+	
+	<!-- 페이징 sql -->
+    <sql id="pagingHeader">
+        SELECT * FROM (
+            SELECT @rownum:=@rownum+1 AS rn, A.* FROM (
+    </sql>
+    <sql id="pagingFooter">
+            ) A , (SELECT @rownum:=0)T
+        )B WHERE B.rn BETWEEN #{start} AND #{end}
+    </sql>
+	
+	
+	<!--  댓글 삭제 처리  -->
+	<delete id="deleteReply">
+		DELETE
+		FROM tbl_geo_reply
+		WHERE grno=#{grno}
+	</delete>
+	
+	
+</mapper>
